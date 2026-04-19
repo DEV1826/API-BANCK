@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Comptes - API Bancaire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">API Bancaire</a>
+            <div class="navbar-nav ms-auto">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light">Déconnexion</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Comptes bancaires</h1>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Créer un compte</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/accounts/create}" method="post" th:object="${createRequest}">
+                            <div class="mb-3">
+                                <label for="ownerName" class="form-label">Nom du titulaire</label>
+                                <input type="text" id="ownerName" class="form-control" th:field="*{ownerName}" required>
+                                <div th:if="${#fields.hasErrors('ownerName')}" class="invalid-feedback d-block" th:errors="*{ownerName}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="initialBalance" class="form-label">Solde initial</label>
+                                <input type="number" step="0.01" min="0" id="initialBalance" class="form-control" th:field="*{initialBalance}" required>
+                                <div th:if="${#fields.hasErrors('initialBalance')}" class="invalid-feedback d-block" th:errors="*{initialBalance}"></div>
+                            </div>
+                            <button type="submit" class="btn btn-success">Créer le compte</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Liste des comptes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${#lists.isEmpty(accounts)}" class="alert alert-info">
+                            Aucun compte trouvé.
+                        </div>
+                        <div th:if="${!#lists.isEmpty(accounts)}" class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom du titulaire</th>
+                                        <th>Solde</th>
+                                        <th>Date de création</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="account : ${accounts}">
+                                        <td th:text="${account.id}"></td>
+                                        <td th:text="${account.ownerName}"></td>
+                                        <td th:text="${account.balance} + ' FCFA'"></td>
+                                        <td th:text="${#temporals.format(account.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
