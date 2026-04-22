@@ -4,40 +4,20 @@ import java.util.List;
 
 public class PagedResponse<T> {
 
-    private int total;
-    private int page;
-    private int limit;
     private List<T> data;
+    private int currentPage;
+    private int itemsPerPage;
+    private long totalItems;
+    private int totalPages;
+    private boolean isLast;
 
-    public PagedResponse(int total, int page, int limit, List<T> data) {
-        this.total = total;
-        this.page = page;
-        this.limit = limit;
+    public PagedResponse(List<T> data, int currentPage, int itemsPerPage, long totalItems, int totalPages, boolean isLast) {
         this.data = data;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
+        this.currentPage = currentPage;
+        this.itemsPerPage = itemsPerPage;
+        this.totalItems = totalItems;
+        this.totalPages = totalPages;
+        this.isLast = isLast;
     }
 
     public List<T> getData() {
@@ -46,5 +26,45 @@ public class PagedResponse<T> {
 
     public void setData(List<T> data) {
         this.data = data;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public int getItemsPerPage() {
+        return itemsPerPage;
+    }
+
+    public void setItemsPerPage(int itemsPerPage) {
+        this.itemsPerPage = itemsPerPage;
+    }
+
+    public long getTotalItems() {
+        return totalItems;
+    }
+
+    public void setTotalItems(long totalItems) {
+        this.totalItems = totalItems;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public boolean isLast() {
+        return isLast;
+    }
+
+    public void setLast(boolean last) {
+        isLast = last;
     }
 }

@@ -3,7 +3,7 @@ package com.example.bankapi.dto;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public class Account {
+public class AccountDetails {
 
     private Long accountId;
     private String name;
@@ -13,7 +13,7 @@ public class Account {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public Account(Long accountId, String name, String email, String phone, BigDecimal balance, Instant createdAt, Instant updatedAt) {
+    public AccountDetails(Long accountId, String name, String email, String phone, BigDecimal balance, Instant createdAt, Instant updatedAt) {
         this.accountId = accountId;
         this.name = name;
         this.email = email;

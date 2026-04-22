@@ -27,7 +27,7 @@ public class AccountService {
     }
 
     @Transactional
-    public Account createAccount(CreateAccountRequest request) {
+    public AccountDetails createAccount(CreateAccountRequest request) {
         if (accountRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException();
         }
@@ -36,7 +36,8 @@ public class AccountService {
             throw new InvalidAmountException();
         }
         Account account = new Account(request.getName(), request.getEmail(), request.getPhone(), balance);
-        return accountRepository.save(account);
+        Account savedAccount = accountRepository.save(account);
+        return toAccountDetails(savedAccount);
     }
 
     @Transactional(readOnly = true)
@@ -47,9 +48,19 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public Account getAccountDetails(Long id) {
+    public PagedResponse<AccountSummary> listAccounts(int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit); // page starts from 1
+        Page<Account> accountPage = accountRepository.findAll(pageable);
+        List<AccountSummary> summaries = accountPage.getContent().stream()
+            .map(this::toSummary)
+            .toList();
+        return new PagedResponse<>(summaries, accountPage.getNumber() + 1, accountPage.getSize(), accountPage.getTotalElements(), accountPage.getTotalPages(), accountPage.isLast());
+    }
+
+    @Transactional(readOnly = true)
+    public AccountDetails getAccountDetails(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
-        return toAccount(account);
+        return toAccountDetails(account);
     }
 
     @Transactional
@@ -62,7 +73,7 @@ public class AccountService {
         Transaction transaction = new Transaction(account, Transaction.TransactionType.DEPOSIT, amount, newBalance, "Dépôt espèces");
         transactionRepository.save(transaction);
 
-        return new DepositResponse("Dépôt effectué", UUID.randomUUID(), newBalance); // Note: accountId should be UUID, but model uses Long
+        return new DepositResponse("Dépôt effectué", account.getId(), newBalance);
     }
 
     @Transactional
@@ -78,7 +89,7 @@ public class AccountService {
         Transaction transaction = new Transaction(account, Transaction.TransactionType.WITHDRAWAL, amount, newBalance, "Retrait espèces");
         transactionRepository.save(transaction);
 
-        return new WithdrawResponse("Retrait effectué", UUID.randomUUID(), newBalance);
+        return new WithdrawResponse("Retrait effectué", account.getId(), newBalance);
     }
 
     @Transactional(readOnly = true)
@@ -97,17 +108,31 @@ public class AccountService {
     }
 
     private AccountSummary toSummary(Account account) {
-        return new AccountSummary(UUID.randomUUID(), account.getOwnerName(), account.getEmail(), account.getBalance(), account.getCreatedAt());
+        return new AccountSummary(
+            account.getId(),
+            account.getOwnerName(),
+            account.getEmail(),
+            account.getBalance(),
+            account.getCreatedAt()
+        );
     }
 
-    private Account toAccount(Account account) {
-        return new Account(UUID.randomUUID(), account.getOwnerName(), account.getEmail(), account.getPhone(), account.getBalance(), account.getCreatedAt(), account.getUpdatedAt());
+    private AccountDetails toAccountDetails(Account account) {
+        return new AccountDetails(
+            account.getId(),
+            account.getOwnerName(),
+            account.getEmail(),
+            account.getPhone(),
+            account.getBalance(),
+            account.getCreatedAt(),
+            account.getUpdatedAt()
+        );
     }
 
     private TransactionDto toTransactionDto(Transaction transaction) {
         return new TransactionDto(
             transaction.getTransactionId(),
-            UUID.randomUUID(), // accountId
+            transaction.getAccount().getId(),
             transaction.getType(),
             transaction.getAmount(),
             transaction.getNewBalance(),
@@ -116,3 +141,5 @@ public class AccountService {
         );
     }
 }
+
+
