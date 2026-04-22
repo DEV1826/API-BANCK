@@ -26,7 +26,7 @@ public class WebController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/accounts";
+        return "redirect:/swagger-ui/index.html";
     }
 
     @GetMapping("/login")
