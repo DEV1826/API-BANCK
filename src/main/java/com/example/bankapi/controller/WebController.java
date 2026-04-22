@@ -38,7 +38,7 @@ public class WebController {
         return "login";
     }
 
-    @GetMapping("/accounts")
+    @GetMapping("/web/accounts")
     public String accounts(Model model) {
         if (!model.containsAttribute("createRequest")) {
             model.addAttribute("createRequest", new CreateAccountRequest());
@@ -57,6 +57,6 @@ public class WebController {
             return "accounts";
         }
         accountService.createAccount(request);
-        return "redirect:/accounts";
+        return "redirect:/web/accounts";
     }
 }
