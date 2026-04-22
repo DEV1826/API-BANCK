@@ -39,7 +39,7 @@ public class WebController {
         if (!model.containsAttribute("createRequest")) {
             model.addAttribute("createRequest", new CreateAccountRequest());
         }
-        List<AccountResponse> accounts = accountService.listAccounts();
+        List<AccountSummary> accounts = accountService.listAllAccounts();
         model.addAttribute("accounts", accounts);
         return "accounts";
     }
@@ -52,7 +52,7 @@ public class WebController {
             model.addAttribute("accounts", accountService.listAccounts());
             return "accounts";
         }
-        accountService.createAccount(request.getOwnerName(), request.getInitialBalance());
+        accountService.createAccount(request);
         return "redirect:/accounts";
     }
 }

@@ -1,6 +1,7 @@
 package com.example.bankapi.controller;
 
 import com.example.bankapi.service.AccountNotFoundException;
+import com.example.bankapi.service.EmailAlreadyExistsException;
 import com.example.bankapi.service.InsufficientFundsException;
 import com.example.bankapi.service.InvalidAmountException;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<Map<String, Object>> handleInsufficient(InsufficientFundsException ex) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleEmailExists(EmailAlreadyExistsException ex) {
+        return build(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     private ResponseEntity<Map<String, Object>> build(HttpStatus status, String message) {
