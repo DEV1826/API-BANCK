@@ -2,10 +2,18 @@ package com.example.bankapi.dto;
 
 import java.math.BigDecimal;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Réponse après un dépôt réussi")
 public class DepositResponse {
 
+    @Schema(description = "Message de confirmation", example = "Dépôt effectué")
     private String message;
+
+    @Schema(description = "Identifiant du compte", example = "1")
     private Long accountId;
+
+    @Schema(description = "Nouveau solde après le dépôt", example = "1500.00")
     private BigDecimal newBalance;
 
     public DepositResponse(String message, Long accountId, BigDecimal newBalance) {

@@ -2,10 +2,18 @@ package com.example.bankapi.dto;
 
 import java.math.BigDecimal;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Réponse après un retrait réussi")
 public class WithdrawResponse {
 
+    @Schema(description = "Message de confirmation", example = "Retrait effectué")
     private String message;
+
+    @Schema(description = "Identifiant du compte", example = "1")
     private Long accountId;
+
+    @Schema(description = "Nouveau solde après le retrait", example = "900.00")
     private BigDecimal newBalance;
 
     public WithdrawResponse(String message, Long accountId, BigDecimal newBalance) {

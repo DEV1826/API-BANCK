@@ -3,14 +3,30 @@ package com.example.bankapi.dto;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Détails complets d'un compte bancaire")
 public class AccountDetails {
 
+    @Schema(description = "Identifiant unique du compte", example = "1")
     private Long accountId;
+
+    @Schema(description = "Nom du propriétaire du compte", example = "JAPHET DJOMO")
     private String name;
+
+    @Schema(description = "Email unique du propriétaire", example = "JAPHETDJOM@GMAIL.COM")
     private String email;
+
+    @Schema(description = "Numéro de téléphone", example = "+237657786440")
     private String phone;
+
+    @Schema(description = "Solde actuel du compte", example = "1000.00")
     private BigDecimal balance;
+
+    @Schema(description = "Date et heure de création du compte (ISO 8601)")
     private Instant createdAt;
+
+    @Schema(description = "Date et heure de la dernière modification (ISO 8601)")
     private Instant updatedAt;
 
     public AccountDetails(Long accountId, String name, String email, String phone, BigDecimal balance, Instant createdAt, Instant updatedAt) {
